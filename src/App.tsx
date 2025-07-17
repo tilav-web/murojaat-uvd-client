@@ -10,6 +10,7 @@ import Groups from "./pages/groups/groups";
 import Emergency from "./pages/emergency/emergency"; // Import Emergency component
 import AdminsPage from "./pages/admins/admins";
 import { useAuthStore } from "./stores/auth/auth.store";
+import { AdminRole } from "./interfaces/auth.interface";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <PrivateRoute roles={["admin", "super_admin"]}>
+          <PrivateRoute roles={[AdminRole.ADMIN, AdminRole.SUPER_ADMIN]}>
             <Home />
           </PrivateRoute>
         ),
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       {
         path: "/users",
         element: (
-          <PrivateRoute roles={["admin", "super_admin"]}>
+          <PrivateRoute roles={[AdminRole.ADMIN, AdminRole.SUPER_ADMIN]}>
             <Users />
           </PrivateRoute>
         ),
@@ -34,7 +35,7 @@ const router = createBrowserRouter([
       {
         path: "/groups",
         element: (
-          <PrivateRoute roles={["admin", "super_admin"]}>
+          <PrivateRoute roles={[AdminRole.ADMIN, AdminRole.SUPER_ADMIN]}>
             <Groups />
           </PrivateRoute>
         ),
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
       {
         path: "/emergency", // Add new route for Emergency
         element: (
-          <PrivateRoute roles={["admin", "super_admin"]}>
+          <PrivateRoute roles={[AdminRole.ADMIN, AdminRole.SUPER_ADMIN]}>
             <Emergency />
           </PrivateRoute>
         ),
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
       {
         path: "/admins",
         element: (
-          <PrivateRoute roles={["super_admin"]}>
+          <PrivateRoute roles={[AdminRole.SUPER_ADMIN]}>
             <AdminsPage />
           </PrivateRoute>
         ),

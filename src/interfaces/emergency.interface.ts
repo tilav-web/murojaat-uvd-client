@@ -1,4 +1,4 @@
-import { IUser } from "./user.interface";
+import type { IUser } from "./user.interface";
 
 export interface IEmergency {
   _id: string;
