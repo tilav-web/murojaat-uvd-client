@@ -14,7 +14,14 @@ import {
 import { LogOut, Bot, KeyRound } from "lucide-react";
 import { useAuthStore } from "@/stores/auth/auth.store";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -41,6 +48,7 @@ export const AppSidebar = () => {
       setIsPasswordDialogOpen(false);
       setPassword("");
     } catch (error) {
+      console.log(error);
       toast.error("Parolni o'zgartirishda xatolik yuz berdi.");
     }
   };
@@ -51,7 +59,7 @@ export const AppSidebar = () => {
         <div className="flex items-center gap-2">
           <Bot className="size-8" />
           <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">
-            Murojaat UVD
+            Sog'lom Yurt
           </span>
         </div>
       </SidebarHeader>
@@ -61,7 +69,7 @@ export const AppSidebar = () => {
             <SidebarGroup key={groupIndex}>
               <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
               {group.items.map((item, itemIndex) => {
-                if (item.path === '/admins' && auth?.role !== 'super_admin') {
+                if (item.path === "/admins" && auth?.role !== "super_admin") {
                   return null;
                 }
                 return (
@@ -82,7 +90,10 @@ export const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Parolni o'zgartirish" onClick={() => setIsPasswordDialogOpen(true)}>
+            <SidebarMenuButton
+              tooltip="Parolni o'zgartirish"
+              onClick={() => setIsPasswordDialogOpen(true)}
+            >
               <KeyRound className="h-4 w-4" />
               <span>Parolni o'zgartirish</span>
             </SidebarMenuButton>
@@ -95,7 +106,10 @@ export const AppSidebar = () => {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
-      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+      <Dialog
+        open={isPasswordDialogOpen}
+        onOpenChange={setIsPasswordDialogOpen}
+      >
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Parolni o'zgartirish</DialogTitle>
