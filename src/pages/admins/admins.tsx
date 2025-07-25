@@ -9,7 +9,7 @@ import { useAdminStore } from "@/stores/auth/admin.store";
 import { AdminRole } from "@/interfaces/auth.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuthStore } from "@/stores/auth/auth.store";
-import { UserCog, Search, Filter, ChevronLeft, ChevronRight, Trash2, KeyRound, PlusCircle } from "lucide-react";
+import { UserCog, Search, Filter, ChevronLeft, ChevronRight, Trash2, KeyRound } from "lucide-react";
 
 interface Admin {
   _id: string;

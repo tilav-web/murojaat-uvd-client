@@ -168,7 +168,7 @@ export default function Home() {
                     fill="#62e3c8"
                     dataKey="count"
                   >
-                    {statistics?.checkedUrlsByType.map((entry, index) => (
+                    {statistics?.checkedUrlsByType.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}

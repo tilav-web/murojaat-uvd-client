@@ -67,8 +67,6 @@ export function DatePicker({ date, setDate, placeholder }: DatePickerProps) {
             day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
             day_hidden: "invisible",
             caption_dropdowns: "flex gap-1",
-            caption_dropdown_month: "relative",
-            caption_dropdown_year: "relative",
             dropdown_month: "appearance-none bg-transparent border-none text-sm font-medium pr-8 py-1.5 rounded-md focus:ring-2 focus:ring-[#62e3c8] focus:outline-none",
             dropdown_year: "appearance-none bg-transparent border-none text-sm font-medium pr-8 py-1.5 rounded-md focus:ring-2 focus:ring-[#62e3c8] focus:outline-none",
             dropdown: "absolute z-10 bg-white shadow-lg rounded-md p-2 mt-1",

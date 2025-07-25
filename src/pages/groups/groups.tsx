@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useGroupStore } from "@/stores/group/group.store";
 import type { IGroup } from "@/interfaces/group.interface";
 import { groupService } from "@/services/group.service";
-import { Users, Search, Filter, ChevronLeft, ChevronRight, MessageSquare, Send, PlusCircle, Ban, CheckCircle } from "lucide-react";
+import { Users, Search, Filter, ChevronLeft, ChevronRight, Send, Ban, CheckCircle } from "lucide-react";
 
 export default function Groups() {
   const { groups, totalGroups, loading, pagination, globalFilter, fetchGroups, setPagination, setGlobalFilter, updateGroupStatus } = useGroupStore();
