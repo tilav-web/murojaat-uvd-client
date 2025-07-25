@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { authService } from "@/services/auth.service";
-import headerbg from "@/assets/headerbg.jpg";
+import headerbg from "@/assets/header-bg.webp";
 
 export const AppSidebar = () => {
   const { auth, setAuth } = useAuthStore();

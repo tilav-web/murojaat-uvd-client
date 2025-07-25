@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import type { ICheckedUrl } from "@/interfaces/checkedurl.interface";
 import { toast } from "sonner";
 
-import headerbg from "@/assets/headerbg.jpg";
+import headerbg from "@/assets/header-bg.webp";
 
 export const Header = () => {
   const { auth } = useAuthStore();
