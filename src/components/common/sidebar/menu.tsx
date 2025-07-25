@@ -5,27 +5,27 @@ export const menuGroups = [
     label: "Asosiy",
     items: [
       {
-        name: "Dashboard",
+        name: "Boshqaruv paneli",
         path: "/",
         icon: Home,
       },
       {
-        name: "Users",
+        name: "Foydalanuvchilar",
         path: "/users",
         icon: Users,
       },
       {
-        name: "Groups",
+        name: "Guruhlar",
         path: "/groups",
         icon: UsersRound,
       },
       {
-        name: "Emergency",
+        name: "Favqulotda holatlar",
         path: "/emergency",
         icon: AlertCircle,
       },
       {
-        name: "Admins",
+        name: "Adminstratorlar",
         path: "/admins",
         icon: ShieldCheck,
       },

@@ -9,6 +9,7 @@ import { useAdminStore } from "@/stores/auth/admin.store";
 import { AdminRole } from "@/interfaces/auth.interface";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuthStore } from "@/stores/auth/auth.store";
+import { UserCog, Search, Filter, ChevronLeft, ChevronRight, Trash2, KeyRound, PlusCircle } from "lucide-react";
 
 interface Admin {
   _id: string;
@@ -39,7 +40,13 @@ export default function AdminsPage() {
 
   const handleRemoveConfirm = async () => {
     if (!selectedAdmin) return;
-    await removeAdmin(selectedAdmin.uid);
+    try {
+      await removeAdmin(selectedAdmin.uid);
+      toast.success("Admin muvaffaqiyatli o'chirildi!");
+    } catch (error) {
+      toast.error("Adminni o'chirishda xatolik yuz berdi.");
+      console.error(error);
+    }
     setIsRemoveDialogOpen(false);
   };
 
@@ -53,7 +60,13 @@ export default function AdminsPage() {
       toast.error("Iltimos, yangi parol kiriting.");
       return;
     }
-    await updateAdminPassword(selectedAdmin.uid, password);
+    try {
+      await updateAdminPassword(selectedAdmin.uid, password);
+      toast.success("Parol muvaffaqiyatli o'zgartirildi!");
+    } catch (error) {
+      toast.error("Parolni o'zgartirishda xatolik yuz berdi.");
+      console.error(error);
+    }
     setIsPasswordDialogOpen(false);
     setPassword("");
   };
@@ -79,17 +92,24 @@ export default function AdminsPage() {
   };
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-6">Adminlarni boshqarish</h1>
-      <div className="flex items-center justify-between mb-4">
-        <Input
-          placeholder="Barcha ustunlar bo'yicha qidirish..."
-          value={globalFilter ?? ""}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
+    <div className="container mx-auto py-10 px-4">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
+        <UserCog className="w-8 h-8 text-[#62e3c8]" /> Adminlarni boshqarish
+      </h1>
+
+      <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+        <div className="relative w-full md:w-1/3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Input
+            placeholder="Barcha ustunlar bo'yicha qidirish..."
+            value={globalFilter ?? ""}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent"
+          />
+        </div>
         <Select onValueChange={(value: AdminRole | "all") => setFilterRole(value)} value={filterRole}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full md:w-[200px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent">
+            <Filter className="w-4 h-4 mr-2 text-gray-400" />
             <SelectValue placeholder="Rol bo'yicha filter" />
           </SelectTrigger>
           <SelectContent>
@@ -99,46 +119,51 @@ export default function AdminsPage() {
           </SelectContent>
         </Select>
       </div>
-      <div className="rounded-md border">
+
+      <div className="rounded-lg border shadow-md overflow-hidden">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-gray-100">
             <TableRow>
               {columns.map((column) => (
-                <TableHead key={column.key}>{column.header}</TableHead>
+                <TableHead key={column.key} className="text-gray-700 font-semibold py-3 px-4">
+                  {column.header}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
                   Yuklanmoqda...
                 </TableCell>
               </TableRow>
             ) : admins.length ? (
               admins.map((admin) => (
-                <TableRow key={admin._id}>
-                  <TableCell>{admin.uid}</TableCell>
-                  <TableCell>{admin.full_name}</TableCell>
-                  <TableCell>{admin.username}</TableCell>
-                  <TableCell>{admin.role}</TableCell>
-                  <TableCell>{new Date(admin.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell>
+                <TableRow key={admin._id} className="hover:bg-gray-50 transition-colors">
+                  <TableCell className="py-3 px-4 font-medium text-gray-700">{admin.uid}</TableCell>
+                  <TableCell className="py-3 px-4 text-gray-600">{admin.full_name}</TableCell>
+                  <TableCell className="py-3 px-4 text-gray-600">{admin.username}</TableCell>
+                  <TableCell className="py-3 px-4 text-gray-600">{admin.role}</TableCell>
+                  <TableCell className="py-3 px-4 text-gray-600">{new Date(admin.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell className="py-3 px-4">
                     <div className="flex gap-2">
                       <Button
                         variant="destructive"
                         size="sm"
                         onClick={() => handleRemoveClick(admin)}
                         disabled={auth?.uid === admin.uid}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md flex items-center gap-1"
                       >
-                        Adminlikdan olish
+                        <Trash2 className="w-4 h-4" /> Adminlikdan olish
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handlePasswordClick(admin)}
+                        className="border-[#62e3c8] text-[#62e3c8] hover:bg-[#62e3c8] hover:text-white px-3 py-2 rounded-md flex items-center gap-1"
                       >
-                        Parolni o'zgartirish
+                        <KeyRound className="w-4 h-4" /> Parolni o'zgartirish
                       </Button>
                     </div>
                   </TableCell>
@@ -146,7 +171,7 @@ export default function AdminsPage() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
                   Natijalar topilmadi.
                 </TableCell>
               </TableRow>
@@ -154,53 +179,60 @@ export default function AdminsPage() {
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"
           size="sm"
           onClick={handlePreviousPage}
           disabled={!canGoPreviousPage}
+          className="border-[#62e3c8] text-[#62e3c8] hover:bg-[#62e3c8] hover:text-white flex items-center gap-1"
         >
-          Oldingi
+          <ChevronLeft className="w-4 h-4" /> Oldingi
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={handleNextPage}
           disabled={!canGoNextPage}
+          className="border-[#62e3c8] text-[#62e3c8] hover:bg-[#62e3c8] hover:text-white flex items-center gap-1"
         >
-          Keyingi
+          Keyingi <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
 
       {/* Remove Admin Dialog */}
       <Dialog open={isRemoveDialogOpen} onOpenChange={setIsRemoveDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[425px] rounded-lg shadow-xl">
           <DialogHeader>
-            <DialogTitle>Adminni o'chirishni tasdiqlang</DialogTitle>
-            <DialogDescription>
-              Rostdan ham {selectedAdmin?.full_name} ({selectedAdmin?.uid}) ni adminlikdan olib tashlamoqchimisiz? Bu amalni orqaga qaytarib bo'lmaydi.
+            <DialogTitle className="text-2xl font-bold text-gray-800">Adminni o'chirishni tasdiqlang</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Rostdan ham <span className="font-semibold">{selectedAdmin?.full_name} ({selectedAdmin?.uid})</span> ni adminlikdan olib tashlamoqchimisiz? Bu amalni orqaga qaytarib bo'lmaydi.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRemoveDialogOpen(false)}>Bekor qilish</Button>
-            <Button variant="destructive" onClick={handleRemoveConfirm}>O'chirish</Button>
+          <DialogFooter className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setIsRemoveDialogOpen(false)} className="border-gray-300 text-gray-700 hover:bg-gray-100">
+              Bekor qilish
+            </Button>
+            <Button variant="destructive" onClick={handleRemoveConfirm} className="bg-red-500 hover:bg-red-600 text-white">
+              O'chirish
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Change Password Dialog */}
       <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] rounded-lg shadow-xl">
           <DialogHeader>
-            <DialogTitle>Parolni o'zgartirish</DialogTitle>
-            <DialogDescription>
-              {selectedAdmin?.full_name} ({selectedAdmin?.uid}) uchun yangi parol kiriting.
+            <DialogTitle className="text-2xl font-bold text-gray-800">Parolni o'zgartirish</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              <span className="font-semibold">{selectedAdmin?.full_name} ({selectedAdmin?.uid})</span> uchun yangi parol kiriting.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="password" className="text-right">
+              <Label htmlFor="password" className="text-right text-gray-700">
                 Yangi parol
               </Label>
               <Input
@@ -208,12 +240,14 @@ export default function AdminsPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="col-span-3"
+                className="col-span-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent"
               />
             </div>
           </div>
-          <DialogFooter>
-            <Button onClick={handlePasswordSubmit}>Saqlash</Button>
+          <DialogFooter className="flex justify-end gap-3">
+            <Button onClick={handlePasswordSubmit} className="bg-[#62e3c8] hover:bg-[#52c2b0] text-white">
+              Saqlash
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

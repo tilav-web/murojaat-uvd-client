@@ -13,11 +13,17 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--normal-bg": "var(--popover)",
           "--normal-text": "var(--popover-foreground)",
           "--normal-border": "var(--border)",
+          "--success-bg": "#62e3c8",
+          "--success-text": "#ffffff",
+          "--success-border": "#62e3c8",
         } as React.CSSProperties
       }
       {...props}
     />
   )
 }
+
+export { Toaster }
+
 
 export { Toaster }

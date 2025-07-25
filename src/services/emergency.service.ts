@@ -25,13 +25,13 @@ export const emergencyService = {
     return response.data;
   },
 
-  async updateEmergencyStatus(group_message_id: number, status: IEmergency["status"]) {
-    const response = await privateInstance.patch(`/emergency/${group_message_id}`, { status });
+  async updateEmergencyStatus(id: string, status: IEmergency["status"]) {
+    const response = await privateInstance.patch(`/emergency/${id}`, { status });
     return response.data;
   },
 
-  async updateEmergencyType(group_message_id: number, type: IEmergency["type"]) {
-    const response = await privateInstance.patch(`/emergency/${group_message_id}`, { type });
+  async updateEmergencyType(id: string, type: IEmergency["type"]) {
+    const response = await privateInstance.patch(`/emergency/type/${id}`, { type });
     return response.data;
   },
 };

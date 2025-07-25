@@ -23,13 +23,10 @@ interface EmergencyState {
   setFilterStatus: (status: IEmergency["status"] | "all") => void;
   setFilterType: (type: IEmergency["type"] | "all") => void;
   updateEmergencyStatus: (
-    group_message_id: number,
+    id: string,
     status: IEmergency["status"]
   ) => Promise<void>;
-  updateEmergencyType: (
-    group_message_id: number,
-    type: IEmergency["type"]
-  ) => Promise<void>;
+  updateEmergencyType: (id: string, type: IEmergency["type"]) => Promise<void>;
 }
 
 export const useEmergencyStore = create<EmergencyState>((set, get) => ({
@@ -78,12 +75,13 @@ export const useEmergencyStore = create<EmergencyState>((set, get) => ({
   setPagination: (pagination) => set({ pagination }),
   setGlobalFilter: (filter) => set({ globalFilter: filter }),
   setFilterStatus: (status) => set({ filterStatus: status }),
-  setFilterType: (type: IEmergency["type"] | "all") => set({ filterType: type }),
+  setFilterType: (type: IEmergency["type"] | "all") =>
+    set({ filterType: type }),
 
-  updateEmergencyStatus: async (group_message_id, status) => {
+  updateEmergencyStatus: async (id, status) => {
     set({ loading: true });
     try {
-      await emergencyService.updateEmergencyStatus(group_message_id, status);
+      await emergencyService.updateEmergencyStatus(id, status);
       toast.success("Favqulodda vaziyat statusi yangilandi.");
       get().fetchEmergencies();
       get().fetchEmergencyStatistics();
@@ -97,10 +95,10 @@ export const useEmergencyStore = create<EmergencyState>((set, get) => ({
     }
   },
 
-  updateEmergencyType: async (group_message_id, type) => {
+  updateEmergencyType: async (id, type) => {
     set({ loading: true });
     try {
-      await emergencyService.updateEmergencyType(group_message_id, type);
+      await emergencyService.updateEmergencyType(id, type);
       toast.success("Favqulodda vaziyat turi yangilandi.");
       get().fetchEmergencies();
       get().fetchEmergencyStatistics();

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-// Temporary comment to force re-compilation for default export issue (3)
-// Temporary comment to force re-compilation
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -40,6 +38,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  BellRing,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle,
+  XCircle,
+  Clock,
+} from "lucide-react";
 
 export default function Emergency() {
   const {
@@ -81,10 +88,10 @@ export default function Emergency() {
 
     try {
       await updateEmergencyType(
-        selectedEmergencyForTypeChange.group_message_id!,
+        selectedEmergencyForTypeChange._id!,
         selectedNewType
       );
-      toast.success("Favqulodda vaziyat turi yangilandi.");
+      toast.success("Favqulodda vaziyat turi muvaffaqiyatli yangilandi.");
       setIsTypeDialogOpen(false);
       setSelectedEmergencyForTypeChange(null);
       setSelectedNewType(null);
@@ -109,7 +116,7 @@ export default function Emergency() {
           onValueChange={(value: IEmergency["status"] | "all") => setFilterStatus(value)}
           value={filterStatus}
         >
-          <SelectTrigger className="w-[120px] h-8 text-xs">
+          <SelectTrigger className="w-[120px] h-8 text-xs border-[#62e3c8]">
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
@@ -128,7 +135,7 @@ export default function Emergency() {
           onValueChange={(value: IEmergency["type"] | "all") => setFilterType(value)}
           value={filterType}
         >
-          <SelectTrigger className="w-[120px] h-8 text-xs">
+          <SelectTrigger className="w-[120px] h-8 text-xs border-[#62e3c8]">
             <SelectValue placeholder="Filter" />
           </SelectTrigger>
           <SelectContent>
@@ -166,93 +173,58 @@ export default function Emergency() {
     return `https://t.me/c/${GROUP_ID.replace("-100", "")}/${group_message_id}`;
   };
 
+  const renderStatCard = (title: string, value: number | undefined, Icon: React.ElementType) => (
+    <Card className="shadow-lg rounded-lg transition-all duration-300 hover:scale-[1.02]">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium text-gray-600">{title}</CardTitle>
+        <Icon className="h-5 w-5 text-[#62e3c8]" />
+      </CardHeader>
+      <CardContent>
+        {loading ? (
+          <Skeleton className="h-8 w-24 bg-gray-200" />
+        ) : (
+          <div className="text-3xl font-bold text-gray-800">
+            {value ?? 0}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-6">Favqulodda vaziyatlar</h1>
+    <div className="container mx-auto py-10 px-4">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8 flex items-center gap-3">
+        <BellRing className="w-8 h-8 text-[#62e3c8]" /> Favqulodda vaziyatlar
+      </h1>
 
       {/* Statistics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Jami favqulodda vaziyatlar
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {statistics?.totalEmergencies ?? 0}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Tasdiqlanganlar
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {statistics?.confirmedEmergencies ?? 0}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Bekor qilinganlar
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {statistics?.canceledEmergencies ?? 0}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Kutilayotganlar
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? (
-              <Skeleton className="h-8 w-24" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {statistics?.pendingEmergencies ?? 0}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
+        {renderStatCard("Jami favqulodda vaziyatlar", statistics?.totalEmergencies, BellRing)}
+        {renderStatCard("Tasdiqlanganlar", statistics?.confirmedEmergencies, CheckCircle)}
+        {renderStatCard("Bekor qilinganlar", statistics?.canceledEmergencies, XCircle)}
+        {renderStatCard("Kutilayotganlar", statistics?.pendingEmergencies, Clock)}
       </div>
 
       {/* Table and Filters */}
       <div className="flex items-center justify-between mb-4">
-        <Input
-          placeholder="Qidirish..."
-          value={globalFilter ?? ""}
-          onChange={(event) => setGlobalFilter(event.target.value)}
-          className="max-w-sm"
-        />
+        <div className="relative w-full md:w-1/3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Input
+            placeholder="Qidirish..."
+            value={globalFilter ?? ""}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent"
+          />
+        </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-lg border shadow-md overflow-hidden">
         <Table>
-          <TableHeader>
+          <TableHeader className="bg-gray-100">
             <TableRow>
               {columns.map((column) => (
-                <TableHead key={column.key}>{column.header}</TableHead>
+                <TableHead key={column.key} className="text-gray-700 font-semibold py-3 px-4">
+                  {column.header}
+                </TableHead>
               ))}
             </TableRow>
           </TableHeader>
@@ -261,34 +233,34 @@ export default function Emergency() {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-gray-500"
                 >
                   Yuklanmoqda...
                 </TableCell>
               </TableRow>
             ) : emergencies.length ? (
               emergencies.map((emergency) => (
-                <TableRow key={emergency._id}>
-                  <TableCell>
+                <TableRow key={emergency._id} className="hover:bg-gray-50 transition-colors">
+                  <TableCell className="py-3 px-4 font-medium text-gray-700">
                     <Link
                       to={`/users?telegram_id=${emergency.user.telegram_id}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-[#62e3c8] hover:underline"
                     >
                       {emergency.user.full_name ||
                         emergency.user.username ||
                         emergency.user.telegram_id}
                     </Link>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-3 px-4 text-gray-600">
                     {emergency.message_content || emergency.message_type}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-3 px-4">
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span
                             className={cn(
-                              "px-2 py-1 rounded-full text-xs font-medium",
+                              "px-2 py-1 text-xs font-medium",
                               emergency.status === "confirmed" &&
                                 "bg-green-100 text-green-800",
                               emergency.status === "canceled" &&
@@ -316,13 +288,13 @@ export default function Emergency() {
                       </Tooltip>
                     </TooltipProvider>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-3 px-4">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => handleTypeChangeClick(emergency)}
                       className={cn(
-                        "px-2 py-1 rounded-full text-xs font-medium",
+                        "px-2 py-1 text-xs font-medium",
                         emergency.type === "PENDING" &&
                           "bg-yellow-100 text-yellow-800",
                         emergency.type === "IN_PROGRESS" &&
@@ -341,13 +313,13 @@ export default function Emergency() {
                         : "Soxta"}
                     </Button>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-3 px-4 text-gray-600">
                     {new Date(emergency.createdAt).toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-3 px-4">
                     <div className="flex gap-2">
                       {emergency.group_message_id && (
-                        <Button asChild size="sm">
+                        <Button asChild size="sm" className="bg-[#62e3c8] hover:bg-[#52c2b0] text-white px-3 py-2 rounded-md">
                           <a
                             href={getTelegramLink(emergency.group_message_id)}
                             target="_blank"
@@ -365,7 +337,7 @@ export default function Emergency() {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-gray-500"
                 >
                   Natijalar topilmadi.
                 </TableCell>
@@ -380,30 +352,32 @@ export default function Emergency() {
           size="sm"
           onClick={handlePreviousPage}
           disabled={!canGoPreviousPage}
+          className="border-[#62e3c8] text-[#62e3c8] hover:bg-[#62e3c8] hover:text-white flex items-center gap-1"
         >
-          Oldingi
+          <ChevronLeft className="w-4 h-4" /> Oldingi
         </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={handleNextPage}
           disabled={!canGoNextPage}
+          className="border-[#62e3c8] text-[#62e3c8] hover:bg-[#62e3c8] hover:text-white flex items-center gap-1"
         >
-          Keyingi
+          Keyingi <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
 
       <Dialog open={isTypeDialogOpen} onOpenChange={setIsTypeDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] rounded-lg shadow-xl">
           <DialogHeader>
-            <DialogTitle>Favqulodda vaziyat turini yangilash</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-2xl font-bold text-gray-800">Favqulodda vaziyat turini yangilash</DialogTitle>
+            <DialogDescription className="text-gray-600">
               Favqulodda vaziyatning yangi turini tanlang.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="message-info" className="text-right">
+              <Label htmlFor="message-info" className="text-right text-gray-700">
                 Xabar
               </Label>
               <Input
@@ -413,23 +387,23 @@ export default function Emergency() {
                   selectedEmergencyForTypeChange?.message_type ||
                   ""
                 }
-                className="col-span-3"
+                className="col-span-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent"
                 disabled
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="current-type" className="text-right">
+              <Label htmlFor="current-type" className="text-right text-gray-700">
                 Joriy turi
               </Label>
               <Input
                 id="current-type"
                 value={selectedEmergencyForTypeChange?.type || ""}
-                className="col-span-3"
+                className="col-span-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent"
                 disabled
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="new-type" className="text-right">
+              <Label htmlFor="new-type" className="text-right text-gray-700">
                 Yangi turi
               </Label>
               <Select
@@ -438,7 +412,7 @@ export default function Emergency() {
                 }
                 value={selectedNewType || ""}
               >
-                <SelectTrigger className="col-span-3">
+                <SelectTrigger className="col-span-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#62e3c8] focus:border-transparent">
                   <SelectValue placeholder="Yangi turini tanlang" />
                 </SelectTrigger>
                 <SelectContent>
@@ -450,8 +424,10 @@ export default function Emergency() {
               </Select>
             </div>
           </div>
-          <DialogFooter>
-            <Button onClick={handleUpdateType}>Saqlash</Button>
+          <DialogFooter className="flex justify-end gap-3">
+            <Button onClick={handleUpdateType} className="bg-[#62e3c8] hover:bg-[#52c2b0] text-white">
+              Saqlash
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
